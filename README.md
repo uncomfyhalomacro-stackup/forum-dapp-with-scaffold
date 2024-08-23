@@ -156,6 +156,10 @@ This should run now at http://localhost:4321.
 
 ### Writing Our Smart Contract with Foundry
 
+At the root of the `packages/foundry/src` directory, we will create the following smart contracts at the
+- `Forum.sol`
+- `Post.sol`
+
 #### Objectives
 
 #### Processes
