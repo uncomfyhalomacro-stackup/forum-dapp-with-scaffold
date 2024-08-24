@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
+const {
+	geo: { city },
+} = Astro.locals.netlify.context;
 ---
 
 <Layout title="StackUp Forum App">
@@ -34,6 +37,7 @@ import Card from "../components/Card.astro";
 			</defs>
 		</svg>
 		<h1>Welcome to <span class="text-gradient">StackUp Forums</span></h1>
+		<h2>Your location is at {city}</h2>
 		<p class="instructions">
 			To get started, open the directory <code>src/pages</code> in your project.<br />
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
