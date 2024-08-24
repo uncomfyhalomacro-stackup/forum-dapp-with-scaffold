@@ -1,16 +1,11 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Web3 from '../components/Web3Provider';
 
+const pageTitle = "Welcome to StackUp Forum";
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Welcome to StackUp Forums</title>
-	</head>
-	<body>
-		<h1>Welcome to StackUp Forums</h1>
-	</body>
-</html>
+<Web3>
+<BaseLayout pageTitle={pageTitle}>
+  <h2>Empowering developers at scale</h2>
+</BaseLayout>
+</Web3>
