@@ -1,3 +1,3 @@
 [build]
 command = "yarn build"
-publish = ["packages/forum/dist", "packages/forum/.netlify"]
+publish = "packages/forum/dist"
