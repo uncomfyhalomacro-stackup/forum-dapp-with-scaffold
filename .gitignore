@@ -1,8 +1,8 @@
 # dependencies
 node_modules
 
-# env files
-*.env**
+# local env files
+*.local
 
 # yarn
 .yarn/*
