@@ -10,5 +10,9 @@
     "start": "yarn workspace @forum-dapp-with-scaffold/forum dev",
     "astro:build": "yarn workspace @forum-dapp-with-scaffold/forum build",
     "build": "yarn astro:build"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.3",
+    "typescript": "5.5.4"
   }
 }
