@@ -9,7 +9,7 @@
     "format": "yarn astro:format",
     "start": "yarn workspace @forum-dapp-with-scaffold/forum dev",
     "astro:build": "yarn workspace @forum-dapp-with-scaffold/forum build",
-    "build": "yarn astro:build"
+    "astro:install": "yarn workspace @forum-dapp-with-scaffold/forum install"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.3",
