@@ -5,10 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "astro:format": "yarn workspace forum format", 
+    "astro:format": "yarn workspace @forum-dapp-with-scaffold/forum format",
     "format": "yarn astro:format",
-    "start": "yarn workspace forum dev",
-    "astro:build": "yarn workspace forum build",
+    "start": "yarn workspace @forum-dapp-with-scaffold/forum dev",
+    "astro:build": "yarn workspace @forum-dapp-with-scaffold/forum build",
     "build": "yarn astro:build"
   }
 }

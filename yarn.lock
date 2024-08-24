@@ -693,6 +693,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@forum-dapp-with-scaffold/forum@workspace:packages/forum":
+  version: 0.0.0-use.local
+  resolution: "@forum-dapp-with-scaffold/forum@workspace:packages/forum"
+  dependencies:
+    "@astrojs/check": "npm:^0.9.3"
+    "@biomejs/biome": "npm:1.8.3"
+    astro: "npm:^4.14.5"
+    typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
+
 "@img/sharp-darwin-arm64@npm:0.33.5":
   version: 0.33.5
   resolution: "@img/sharp-darwin-arm64@npm:0.33.5"
@@ -2318,17 +2329,6 @@ __metadata:
 "forum-dapp-with-scaffold@workspace:.":
   version: 0.0.0-use.local
   resolution: "forum-dapp-with-scaffold@workspace:."
-  languageName: unknown
-  linkType: soft
-
-"forum@workspace:packages/forum":
-  version: 0.0.0-use.local
-  resolution: "forum@workspace:packages/forum"
-  dependencies:
-    "@astrojs/check": "npm:^0.9.3"
-    "@biomejs/biome": "npm:1.8.3"
-    astro: "npm:^4.14.5"
-    typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
 

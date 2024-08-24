@@ -1,5 +1,5 @@
 {
-  "name": "forum",
+  "name": "@forum-dapp-with-scaffold/forum",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
