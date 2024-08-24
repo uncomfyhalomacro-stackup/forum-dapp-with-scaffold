@@ -1,0 +1,11 @@
+{
+  "name": "forum-dapp-with-scaffold",
+  "packageManager": "yarn@4.4.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "yarn workspace @forum-dapp-with-scaffold/forum dev"
+  }
+}
