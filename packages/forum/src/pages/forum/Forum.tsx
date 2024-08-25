@@ -6,6 +6,7 @@ const Forum = () => {
 			<h2>
 				<Link to="/post">Post</Link> something or start a poll!
 			</h2>
+			<Link to="/">Go back to home page</Link>
 		</main>
 	);
 };

@@ -1,4 +1,3 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { navlinks } from "../constants/NavLinks";
 
 interface LinkProps {
@@ -31,9 +30,6 @@ const Navbar = () => {
 							link={site.link}
 						/>
 					))}
-					<li className="navbuttons">
-						<ConnectButton />
-					</li>
 				</ul>
 			</nav>
 		</header>

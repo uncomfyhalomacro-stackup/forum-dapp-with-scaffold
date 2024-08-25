@@ -1,24 +1,20 @@
 import { StrictMode } from "react";
 import RootPage from "./App.tsx";
 import "./index.css";
+import "@rainbow-me/rainbowkit/styles.css";
 import ReactDOM from "react-dom/client";
 
 // Different pages here
 import Forum from "./pages/forum/Forum.tsx";
-import Profile from "./pages/profile/App.tsx";
+import Profile from "./pages/profile/Profile.tsx";
 
-import {
-	Routes,
-	Route,
-	BrowserRouter,
-	createBrowserRouter,
-} from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "@rainbow-me/rainbowkit/styles.css";
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { arbitrum, sepolia } from "viem/chains";
+import * as chains from "viem/chains";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Post } from "./pages/forum/components/Posts.tsx";
@@ -27,7 +23,7 @@ const queryClient = new QueryClient();
 const config = getDefaultConfig({
 	appName: "StackUp Forum",
 	projectId: `${projectId}`,
-	chains: [arbitrum, sepolia],
+	chains: [chains.sepolia, chains.arbitrum, chains.arbitrumSepolia],
 	ssr: true,
 });
 
@@ -37,7 +33,7 @@ ReactDOM.createRoot(domNode).render(
 	<StrictMode>
 		<WagmiProvider config={config}>
 			<QueryClientProvider client={queryClient}>
-				<RainbowKitProvider>
+				<RainbowKitProvider coolMode={true} modalSize="wide">
 					<BrowserRouter>
 						<Routes>
 							<Route path="/" element={<RootPage />} />

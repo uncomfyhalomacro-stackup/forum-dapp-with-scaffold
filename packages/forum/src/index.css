@@ -22,7 +22,6 @@ body {
 button {
   text-align: start;
   display: block;
-  width: 200px;
   margin: 10px auto;
   padding: 10px;
   font-size: 16px;
@@ -65,4 +64,20 @@ form {
   label.description {
     display: block;
   }
+}
+
+.welcome {
+  display: flex;
+  flex-direction: row;
+  text-align: start;
+  padding: 10px 0;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.connectbutton {
+  margin-top: 20px;
+  margin-left: 50px;
+  width: 100%;
 }

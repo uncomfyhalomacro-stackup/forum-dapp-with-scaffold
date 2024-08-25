@@ -1,12 +1,12 @@
 // See https://reactrouter.com/en/main/components/form
 // Nice goodie so I don't have to create my own form element
 import { type FormEvent, useState } from "react";
-import { redirect } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 const Post = () => {
 	const [formData, setFormData] = useState({
-		title: "openSUSE is awesome!",
-		description: "openSUSE is an awesome community of developers",
+		title: "StackUp is awesome!",
+		description: "StackUp is an awesome community of developers",
 		spoiler: false,
 	});
 
@@ -21,7 +21,7 @@ const Post = () => {
 	};
 
 	return (
-		<>
+		<div>
 			<form
 				onSubmit={(e) => {
 					action(e);
@@ -31,7 +31,6 @@ const Post = () => {
 				<input
 					type="text"
 					name="title"
-					defaultValue=""
 					value={formData.title}
 					onChange={(e) => setFormData({ ...formData, title: e.target.value })}
 					required
@@ -61,7 +60,8 @@ const Post = () => {
 				</label>
 				<button type="submit">Create Post</button>
 			</form>
-		</>
+			<Link to="/">Go back to home page</Link>
+		</div>
 	);
 };
 
