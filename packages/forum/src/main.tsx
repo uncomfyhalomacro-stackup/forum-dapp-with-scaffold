@@ -7,9 +7,13 @@ import ReactDOM from "react-dom/client";
 // Different pages here
 import Forum from "./pages/forum/Forum.tsx";
 import Profile from "./pages/profile/Profile.tsx";
-import { Post } from "./pages/forum/components/Posts.tsx";
+import {
+	Post,
+	postActionHandler,
+	PostSuccessPage,
+} from "./pages/forum/components/Posts.tsx";
 
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // RainbowKit specific css
 import "@rainbow-me/rainbowkit/styles.css";
@@ -20,23 +24,46 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 // Utils
-import { queryClientConfig, wagmiProviderConfig } from "./utils/web3-init";
+import {
+	queryClientConfig,
+	wagmiProviderConfig,
+} from "./web3-utils/web3-init.ts";
+import { Navbar } from "./components/Navbar.tsx";
 
 const domNode = document.getElementById("root") || new HTMLElement(); // Or use as HTMLElement. See https://stackoverflow.com/a/55781571
 
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <RootPage />,
+	},
+	{
+		path: "/feed",
+		element: <Forum />,
+	},
+	{
+		path: "/post",
+		element: <Post />,
+		action: postActionHandler,
+		children: [
+			{
+				path: "success",
+				element: <PostSuccessPage />,
+			},
+		],
+	},
+	{
+		path: "/profile",
+		element: <Profile />,
+	},
+]);
 ReactDOM.createRoot(domNode).render(
 	<StrictMode>
 		<WagmiProvider config={wagmiProviderConfig}>
 			<QueryClientProvider client={queryClientConfig}>
 				<RainbowKitProvider coolMode={true} modalSize="wide">
-					<BrowserRouter>
-						<Routes>
-							<Route path="/" element={<RootPage />} />
-							<Route path="/feed" element={<Forum />} />
-							<Route path="/post" element={<Post />} />
-							<Route path="/profile" element={<Profile />} />
-						</Routes>
-					</BrowserRouter>
+					<Navbar />
+					<RouterProvider router={router} />
 				</RainbowKitProvider>
 			</QueryClientProvider>
 		</WagmiProvider>
