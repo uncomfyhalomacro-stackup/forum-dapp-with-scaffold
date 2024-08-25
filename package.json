@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn workspace @forum-dapp-with-scaffold/forum dev"
+    "start": "yarn workspace @forum-dapp-with-scaffold/forum dev",
+    "format": "yarn workspace @forum-dapp-with-scaffold/forum format"
   }
 }
