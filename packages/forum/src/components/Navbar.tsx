@@ -21,7 +21,7 @@ const Navbar = () => {
 			<nav>
 				<ul
 					style={{
-						listStyle: "none"
+						listStyle: "none",
 					}}
 				>
 					{navlinks.map((site, id) => (
@@ -31,7 +31,9 @@ const Navbar = () => {
 							link={site.link}
 						/>
 					))}
-                    <li className="navbuttons"><ConnectButton /></li>
+					<li className="navbuttons">
+						<ConnectButton />
+					</li>
 				</ul>
 			</nav>
 		</header>

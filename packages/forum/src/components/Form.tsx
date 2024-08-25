@@ -1,4 +1,3 @@
-
-const PostForm = async() => {
-    return
-}
+const PostForm = async () => {
+	return;
+};

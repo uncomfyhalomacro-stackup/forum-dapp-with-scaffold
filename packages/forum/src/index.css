@@ -45,3 +45,24 @@ button:hover {
     text-decoration-line: none;
   }
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  label {
+    padding: 0.5rem;
+  }
+  input {
+    padding: 0.25rem;
+  }
+
+  textarea {
+    width: 50em;
+    height: 5em;
+  }
+
+  label.description {
+    display: block;
+  }
+}
