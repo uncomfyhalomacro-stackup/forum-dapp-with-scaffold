@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import RootPage from "./App.tsx";
 import "./index.css";
-import "@rainbow-me/rainbowkit/styles.css";
 import ReactDOM from "react-dom/client";
 
 // Different pages here
