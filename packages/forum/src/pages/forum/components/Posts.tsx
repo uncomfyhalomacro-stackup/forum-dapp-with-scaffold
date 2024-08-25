@@ -1,9 +1,10 @@
 // See https://reactrouter.com/en/main/components/form
 // Nice goodie so I don't have to create my own form element
 import { type FormEvent, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, redirect, replace, useNavigate } from "react-router-dom";
 
 const Post = () => {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		title: "StackUp is awesome!",
 		description: "StackUp is an awesome community of developers",
@@ -17,7 +18,20 @@ const Post = () => {
 
 		console.log(formData);
 
-		return redirect("/profile");
+		// Do something to data here
+
+		// reset
+		setFormData({
+			title: "",
+			description: "",
+			spoiler: false,
+		});
+
+		// redirect
+		// TODO: move this over to feed
+		// NOTE: `replace` to true replaces the previous web history to the future redirected page. So going back to it is not possible
+		// unless set to false.
+		return navigate("/feed", { replace: true });
 	};
 
 	return (
@@ -27,21 +41,18 @@ const Post = () => {
 					action(e);
 				}}
 			>
-				<label htmlFor="title">Post title: </label>
+				<h1>Post something wonderful!</h1>
 				<input
 					type="text"
 					name="title"
-					value={formData.title}
+					placeholder="Need a title?"
 					onChange={(e) => setFormData({ ...formData, title: e.target.value })}
 					required
 				/>
-				<label htmlFor="description" className="description">
-					What's on your mind?{" "}
-				</label>
 				<textarea
 					rows={5}
 					name="description"
-					value={formData.description}
+					placeholder="What's on your mind?"
 					onChange={(e) =>
 						setFormData({ ...formData, description: e.target.value })
 					}
