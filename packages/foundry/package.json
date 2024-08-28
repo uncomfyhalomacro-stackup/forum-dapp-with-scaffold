@@ -1,4 +1,9 @@
 {
-  "name": "foundry",
-  "packageManager": "yarn@4.4.1"
+  "name": "@forum-dapp-with-scaffold/foundry",
+  "packageManager": "yarn@4.4.1",
+  "scripts": {
+    "compile": "forge compile",
+    "test": "forge test",
+    "format": "forge fmt"
+  }
 }
