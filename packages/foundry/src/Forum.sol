@@ -32,9 +32,10 @@ contract Forum {
 
     // Rule 1: a user can own multiple posts. so each of the
     // users are mapped to a list of posts that they made
-    uint256 postIdIncrement;
-    uint256 pollIdIncrement;
-    uint256 commentIdIncrement;
+    uint256 public postIdIncrement;
+    uint256 public pollIdIncrement;
+    uint256 public commentIdIncrement;
+
     mapping(address => uint256[]) private userPosts; // each ID will be assigned to the user associated with post
 
     mapping(uint256 => Post) public posts; // assign postId to posts
@@ -53,60 +54,39 @@ contract Forum {
 
     event PostSubmitted(address indexed userAddress, Post post);
 
-    function createPost(
-        string memory _title,
-        string memory _description,
-        bool _spoil
-    ) public {
+    function createPost(string memory _title, string memory _description, bool _spoil) public returns (uint256) {
         uint256 postId = postIdIncrement++;
-        posts[postId] = Post(
-            postId,
-            _title,
-            _description,
-            _spoil,
-            0,
-            block.timestamp
-        );
+        posts[postId] = Post(postId, _title, _description, _spoil, 0, block.timestamp);
         userPosts[msg.sender].push(postId);
+        return postId;
     }
 
     // Creating a poll should only happen when the user was creating a post in the frontend...
-    function createPoll(
-        uint256 _postId,
-        string memory _question,
-        string memory _option1,
-        string memory _option2
-    ) public {
+    function createPoll(uint256 _postId, string memory _question, string memory _option1, string memory _option2)
+        public
+        returns (uint256)
+    {
         require(_postId <= postIdIncrement, "Post does not exist!");
         uint256 pollId = pollIdIncrement++;
         polls[pollId] = Poll(pollId, _question, _option1, _option2, 0, 0);
         postToPoll[_postId] = pollId;
         userPolls[msg.sender].push(pollId);
+        return pollId;
     }
 
-    function createComment(
-        uint256 _postId,
-        string memory _title,
-        string memory _description,
-        bool _spoil
-    ) public {
+    function createComment(uint256 _postId, string memory _title, string memory _description, bool _spoil)
+        public
+        returns (uint256)
+    {
         require(_postId <= postIdIncrement, "Post does not exist!");
         uint256 commentId = commentIdIncrement++;
-        comments[commentId] = Comment(
-            commentId,
-            _title,
-            _description,
-            _spoil,
-            0,
-            block.timestamp
-        );
+        comments[commentId] = Comment(commentId, _title, _description, _spoil, 0, block.timestamp);
         postToComments[_postId].push(commentId);
         userPolls[msg.sender].push(commentId);
+        return commentId;
     }
 
-    function getPostsFromAddress(
-        address _user
-    ) public view returns (uint256[] memory) {
+    function getPostsFromAddress(address _user) public view returns (uint256[] memory) {
         return userPosts[_user];
     }
 
@@ -115,32 +95,28 @@ contract Forum {
         return posts[_postId];
     }
 
-    function getPollFromPost(
-        uint256 _postId
-    ) public view returns (Poll memory) {
+    function getPollFromPost(uint256 _postId) public view returns (Poll memory) {
         require(_postId <= postIdIncrement, "Post does not exist!");
         uint256 _pollId = postToPoll[_postId];
-		Poll memory poll = getPoll(_pollId);
-		return poll;
+        Poll memory poll = getPoll(_pollId);
+        return poll;
     }
 
-	function getPoll(
-		uint256 _pollId
-	) public view returns (Poll memory) {
-		require(_pollId <= pollIdIncrement, "Poll does not exist!");
-		return polls[_pollId];
-	}
+    function getPoll(uint256 _pollId) public view returns (Poll memory) {
+        require(_pollId <= pollIdIncrement, "Poll does not exist!");
+        return polls[_pollId];
+    }
 
-	// Returns a list of comments as commentIds
-	function getCommentsFromPost(uint256 _postId) public view returns(uint256[] memory) {
+    // Returns a list of comments as commentIds
+    function getCommentsFromPost(uint256 _postId) public view returns (uint256[] memory) {
         require(_postId <= postIdIncrement, "Post does not exist!");
-		return postToComments[_postId];
-	}
+        return postToComments[_postId];
+    }
 
-	function getComment(uint256 _commentId) public view returns(Comment memory) {
-		require(_commentId <= commentIdIncrement, "Comment does not exist!");
-		return comments[_commentId];
-	}
+    function getComment(uint256 _commentId) public view returns (Comment memory) {
+        require(_commentId <= commentIdIncrement, "Comment does not exist!");
+        return comments[_commentId];
+    }
 
     function upVotePost(uint256 _postId) public {
         require(_postId <= postIdIncrement, "Post does not exist!");
@@ -184,11 +160,7 @@ contract Forum {
         polls[postToPoll[_postId]] = poll;
     }
 
-    function compareStringsbyBytes(
-        string memory s1,
-        string memory s2
-    ) public pure returns (bool) {
-        return
-            keccak256(abi.encodePacked(s1)) == keccak256(abi.encodePacked(s2));
+    function compareStringsbyBytes(string memory s1, string memory s2) public pure returns (bool) {
+        return keccak256(abi.encodePacked(s1)) == keccak256(abi.encodePacked(s2));
     }
 }
