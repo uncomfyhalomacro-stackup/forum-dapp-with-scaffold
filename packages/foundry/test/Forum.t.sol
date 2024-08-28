@@ -13,17 +13,30 @@ contract ForumTest is Test {
         vm.prank(address(1));
         string memory _title = "StackUp";
         string memory _description = "Empowering Developers at Scale!";
-        string memory _date = "2027-03-03";
         bool _spoil = false;
         forum = new Forum();
-        forum.createPost(msg.sender, _title, _description, _date, _spoil);
+        forum.createPost(_title, _description, _spoil);
     }
 
-    function testGetPost() public view {
-        Forum.Post[] memory _posts = forum.getPostsFromAddress(msg.sender);
-        assertEq(_posts[0].title, "StackUp");
-        assertEq(_posts[0].description, "Empowering Developers at Scale!");
-        assertEq(_posts[0].date, "2027-03-03");
-        assertEq(_posts[0].spoil, false);
+	function testCreatePoll() public {
+		forum.createPoll(0, "Is StackUp The Best?", "Yes", "No");
+		Forum.Poll memory _poll = forum.getPollFromPost(0);
+		assertEq(_poll.question, "Is StackUp The Best?");
+	}
+
+    function testGetPost() public {
+		Forum.Post memory _post = forum.getPost(0);
+        assertEq(_post.title, "StackUp");
+        assertEq(_post.description, "Empowering Developers at Scale!");
+        assertEq(_post.spoil, false);
     }
+
+	function testVotePost() public {
+		forum.upVotePost(0);
+		Forum.Post memory _post = forum.getPost(0);
+		assertEq(_post.likes, 1);
+		forum.downVotePost(0);
+		_post = forum.getPost(0);
+		assertEq(_post.likes, 0);
+	}
 }
