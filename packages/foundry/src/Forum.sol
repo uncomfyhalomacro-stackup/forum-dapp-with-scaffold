@@ -119,8 +119,28 @@ contract Forum {
         uint256 _postId
     ) public view returns (Poll memory) {
         require(_postId <= postIdIncrement, "Post does not exist!");
-        return polls[postToPoll[_postId]];
+        uint256 _pollId = postToPoll[_postId];
+		Poll memory poll = getPoll(_pollId);
+		return poll;
     }
+
+	function getPoll(
+		uint256 _pollId
+	) public view returns (Poll memory) {
+		require(_pollId <= pollIdIncrement, "Poll does not exist!");
+		return polls[_pollId];
+	}
+
+	// Returns a list of comments as commentIds
+	function getCommentsFromPost(uint256 _postId) public view returns(uint256[] memory) {
+        require(_postId <= postIdIncrement, "Post does not exist!");
+		return postToComments[_postId];
+	}
+
+	function getComment(uint256 _commentId) public view returns(Comment memory) {
+		require(_commentId <= commentIdIncrement, "Comment does not exist!");
+		return comments[_commentId];
+	}
 
     function upVotePost(uint256 _postId) public {
         require(_postId <= postIdIncrement, "Post does not exist!");
