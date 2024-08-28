@@ -1,3 +1,0 @@
-const PostForm = async () => {
-	return;
-};
