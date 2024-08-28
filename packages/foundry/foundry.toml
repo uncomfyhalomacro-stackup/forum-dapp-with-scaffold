@@ -3,4 +3,15 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
+[rpc_endpoints]
+default_network = "http://127.0.0.1:8545"
+localhost = "http://127.0.0.1:8545"
+
+
+arbitrumSepolia = "https://sepolia-rollup.arbitrum.io/rpc"
+
+[etherscan]
+arbitrumSepolia = { key="${ARBISCAN_API_KEY}", url = "https://api-sepolia.arbiscan.io/api" }
+
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
