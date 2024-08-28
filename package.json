@@ -12,6 +12,7 @@
     "forum:fmt": "yarn workspace @forum-dapp-with-scaffold/forum format",
     "start": "yarn workspace @forum-dapp-with-scaffold/forum dev",
     "format": "yarn foundry:fmt && yarn forum:fmt",
-    "build": "yarn foundry:build && yarn forum:build"
+    "build": "yarn foundry:build && yarn forum:build",
+	"test": "yarn workspace @forum-dapp-with-scaffold/foundry test"
   }
 }
