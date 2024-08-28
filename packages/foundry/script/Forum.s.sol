@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import {Script, console} from "forge-std/Script.sol";
 import {Forum} from "../src/Forum.sol";
 
-contract CounterScript is Script {
+contract ForumScript is Script {
     Forum public forum;
 
     function setUp() public {}
