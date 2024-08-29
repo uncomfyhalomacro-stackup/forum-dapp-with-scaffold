@@ -1,15 +1,18 @@
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { createConfig } from "wagmi";
 import * as chains from "viem/chains";
 import { QueryClient } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
-const config = getDefaultConfig({
+
+const rainbowConfig = getDefaultConfig({
 	appName: "StackUp Forum",
 	projectId: `${projectId}`,
 	chains: [chains.sepolia, chains.arbitrum, chains.arbitrumSepolia],
 	ssr: true,
 });
 
-export { config as wagmiProviderConfig, queryClient as queryClientConfig };
+
+export { rainbowConfig, queryClient as queryClientConfig };

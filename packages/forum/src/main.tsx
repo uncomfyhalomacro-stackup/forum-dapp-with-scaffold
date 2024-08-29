@@ -25,7 +25,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 // Utils
 import {
 	queryClientConfig,
-	wagmiProviderConfig,
+	rainbowConfig,
 } from "./web3-utils/web3-init.ts";
 import { Navbar } from "./components/Navbar.tsx";
 
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(domNode).render(
 	<StrictMode>
-		<WagmiProvider config={wagmiProviderConfig}>
+		<WagmiProvider config={rainbowConfig}>
 			<QueryClientProvider client={queryClientConfig}>
 				<RainbowKitProvider coolMode={true} modalSize="wide">
 					<Navbar />
