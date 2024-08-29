@@ -1,4 +1,3 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { navlinks } from "../constants/NavLinks";
 
 interface LinkProps {
@@ -19,16 +18,6 @@ const Navbar = () => {
 	return (
 		<header>
 			<nav>
-				<div className="connectbutton">
-					<ConnectButton
-						label="Sign in"
-						chainStatus="full"
-						accountStatus={{
-							largeScreen: "full",
-							smallScreen: "avatar",
-						}}
-					/>
-				</div>
 				<ul
 					style={{
 						listStyle: "none",

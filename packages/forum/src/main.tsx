@@ -23,10 +23,7 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 // Utils
-import {
-	queryClientConfig,
-	rainbowConfig,
-} from "./web3-utils/web3-init.ts";
+import { queryClientConfig, rainbowConfig } from "./web3-utils/web3-init.ts";
 import { Navbar } from "./components/Navbar.tsx";
 
 const domNode = document.getElementById("root") || new HTMLElement(); // Or use as HTMLElement. See https://stackoverflow.com/a/55781571
