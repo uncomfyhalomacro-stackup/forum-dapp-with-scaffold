@@ -2,7 +2,6 @@
 // Since we are using typescript, we cannot infer the types correctly
 // Relevant resource https://github.com/remix-run/remix/blob/main/decisions/0003-infer-types-for-useloaderdata-and-useactiondata-from-loader-and-action-via-generics.md
 // See also https://github.com/remix-run/remix/discussions/8616 and https://github.com/remix-run/react-router/discussions/9792
-import type React from "react";
 import {
 	Link,
 	Form,
@@ -11,6 +10,10 @@ import {
 	type ActionFunctionArgs,
 	Outlet,
 } from "react-router-dom";
+import { useAccount } from "wagmi";
+import { rainbowConfig as config } from "../../../web3-utils/web3-init";
+import { getAccount, simulateContract, writeContract } from "wagmi/actions";
+import { abi, deployedContractAddress } from "../../../web3-utils/web3-init.ts";
 
 export type PostStatus = {
 	error: string;
@@ -29,9 +32,11 @@ export type PostDetails = {
 export type PostLoaderData = {
 	post: PostDetails | null;
 };
-const postActionHandler = async ({ request }: ActionFunctionArgs) => {
+
+const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 	console.log(request);
 	const data: FormData = await request.formData();
+	const account = getAccount(config);
 
 	const postSubmission = {
 		title: data.get("title") as FormDataEntryValue,
@@ -55,37 +60,70 @@ const postActionHandler = async ({ request }: ActionFunctionArgs) => {
 		return postaction;
 	}
 
-	console.log(postSubmission);
-
-	return redirect("/post/success");
+	const title = postSubmission.title.valueOf().toString().trim();
+	const description = postSubmission.description.valueOf().toString().trim();
+	const spoil = postSubmission.spoiler.valueOf().toString().trim() === "on";
+	if (account.isConnected) {
+		const { result } = await simulateContract(config, {
+			abi: abi,
+			address: deployedContractAddress,
+			functionName: "createPost",
+			args: [title, description, spoil],
+			account: account.address,
+		});
+		await writeContract(config, {
+			abi: abi,
+			address: deployedContractAddress,
+			functionName: "createPost",
+			args: [title, description, spoil],
+			account: account.address,
+		});
+		return redirect("/post/success");
+	}
+	return redirect("/post/error");
 };
 
-const Post: React.FC = () => {
+const Post = () => {
 	const actionData = useActionData() as PostActionData;
 
-	const el = (
-		<div>
-			<Form method="POST" action="/post">
-				<h1>Post something wonderful!</h1>
-				<input type="text" name="title" placeholder="Need a title?" required />
-				<textarea
-					rows={5}
-					name="description"
-					placeholder="What's on your mind?"
-				/>
-				<label htmlFor="spoiler">
-					Spoil or not to spoil
-					<input type="checkbox" name="spoiler" defaultChecked />
-				</label>
-				<button type="submit">Create Post</button>
-				{actionData?.status?.error && <p>{actionData?.status?.error}</p>}
-			</Form>
-			<Outlet />
-			<Link to="/">Go back to home page</Link>
-		</div>
-	);
+	const account = useAccount();
 
-	return el;
+	if (account.isConnected) {
+		const el = (
+			<div>
+				<Form method="POST" action="/post">
+					<h1>Post something wonderful!</h1>
+					<input
+						type="text"
+						name="title"
+						placeholder="Need a title?"
+						required
+					/>
+					<textarea
+						rows={5}
+						name="description"
+						placeholder="What's on your mind?"
+					/>
+					<label htmlFor="spoiler">
+						Spoil or not to spoil
+						<input type="checkbox" name="spoiler" defaultChecked />
+					</label>
+					<button type="submit">Create Post</button>
+					{actionData?.status?.error && <p>{actionData?.status?.error}</p>}
+				</Form>
+				<Outlet />
+				<Link to="/">Go back to home page</Link>
+			</div>
+		);
+
+		return el;
+	}
+	return (
+		<main>
+			<h2>Your account is not connected. You can't post yet.</h2>
+			<Link to="/">Go back to home page</Link>
+		</main>
+	);
 };
 
 const PostSuccessPage = () => {
@@ -96,4 +134,14 @@ const PostSuccessPage = () => {
 	);
 };
 
-export { PostSuccessPage, Post, postActionHandler };
+const PostFailurePage = () => {
+	return (
+		<>
+			<h3>
+				You were not able to post! Something went wrong... are you signed in?
+			</h3>
+		</>
+	);
+};
+
+export { PostSuccessPage, PostFailurePage, Post, PostActionHandler };

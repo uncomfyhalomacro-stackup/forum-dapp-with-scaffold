@@ -1,8 +1,16 @@
 const projectId = import.meta.env.VITE_PROJECT_ID;
+const deployedContractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT;
 
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { createConfig } from "wagmi";
-import * as chains from "viem/chains";
+import { abi } from "../contracts/Forum.json";
+
+import { Chain, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import {
+	arbitrum,
+	arbitrumSepolia,
+	sepolia,
+	base,
+	mainnet,
+} from "@wagmi/core/chains";
 import { QueryClient } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -10,9 +18,16 @@ const queryClient = new QueryClient();
 const rainbowConfig = getDefaultConfig({
 	appName: "StackUp Forum",
 	projectId: `${projectId}`,
-	chains: [chains.sepolia, chains.arbitrum, chains.arbitrumSepolia],
-	ssr: true,
+	chains: [arbitrum, arbitrumSepolia, sepolia, base, mainnet],
+	ssr: false,
 });
 
+const client = rainbowConfig.getClient();
 
-export { rainbowConfig, queryClient as queryClientConfig };
+export {
+	abi,
+	deployedContractAddress,
+	rainbowConfig,
+	client,
+	queryClient as queryClientConfig,
+};

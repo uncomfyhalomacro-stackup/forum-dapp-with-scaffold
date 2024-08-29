@@ -8,7 +8,8 @@ import Forum from "./pages/forum/Forum.tsx";
 import Profile from "./pages/profile/Profile.tsx";
 import {
 	Post,
-	postActionHandler,
+	PostActionHandler,
+	PostFailurePage,
 	PostSuccessPage,
 } from "./pages/forum/components/Posts.tsx";
 
@@ -40,11 +41,15 @@ const router = createBrowserRouter([
 	{
 		path: "/post",
 		element: <Post />,
-		action: postActionHandler,
+		action: PostActionHandler,
 		children: [
 			{
 				path: "success",
 				element: <PostSuccessPage />,
+			},
+			{
+				path: "failure",
+				element: <PostFailurePage />,
 			},
 		],
 	},

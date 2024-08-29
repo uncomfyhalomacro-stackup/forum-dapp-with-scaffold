@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Link } from "react-router-dom";
-import { useAccount, useAccountEffect } from "wagmi";
+import { useAccount } from "wagmi";
 
 const RootPage = () => {
 	const account = useAccount();

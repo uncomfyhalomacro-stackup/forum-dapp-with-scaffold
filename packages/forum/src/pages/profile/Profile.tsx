@@ -6,8 +6,8 @@ const Profile = () => {
 	if (account.isConnected) {
 		return (
 			<main>
-				<h1>Hi there {account.address}! You are currently connected to {account.chain?.name}</h1>
-				<h3><Link to="/">Go back to home page</Link></h3>
+				<h1>Hi there {account.address?.slice(0,8)}...! You are currently connected to {account.chain?.name}.</h1>
+				<h3><Link to="/">Go back to home page</Link> or to <Link to="/feed">Feed</Link>.</h3>
 			</main>
 		)
 	}
