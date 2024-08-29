@@ -9,7 +9,9 @@ const Forum = () => {
 				<h2>
 					<Link to="/post">Post</Link> something or start a poll!
 				</h2>
-				<h3><Link to="/">Go back to home page</Link></h3>
+				<h3>
+					<Link to="/">Go back to home page</Link>
+				</h3>
 			</main>
 		);
 	}

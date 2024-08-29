@@ -24,12 +24,13 @@ const RootPage = () => {
 				</div>
 				<div>
 					<h2>
-						You are now logged in. Visit our <Link to="/feed">Feed</Link> or visit your <Link to="/profile">Profile</Link>.
+						You are now logged in. Visit our <Link to="/feed">Feed</Link> or
+						visit your <Link to="/profile">Profile</Link>.
 					</h2>
 				</div>
 			</div>
 		);
-	// biome-ignore lint/style/noUselessElse: <explanation>
+		// biome-ignore lint/style/noUselessElse: <explanation>
 	} else {
 		return (
 			<div>
