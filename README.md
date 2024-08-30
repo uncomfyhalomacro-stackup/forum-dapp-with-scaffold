@@ -10,7 +10,7 @@ yarn install --refresh-lockfile
 
 ## List of commands
 
-The commands use `just` to invoke other commands. The reason being that
+The commands use [`just`](https://just.systems) to invoke other commands. The reason being that
 `yarn` can't read `.env` files *for itself*. So we can't do custom
 env vars for the scripts section in `yarn`.
 
@@ -64,8 +64,8 @@ just export-abi
 - [ ] List of posts or "feed" from different users
 - [X] Forum Smart Contract
 - ~~[ ] Posts Smart Contract~~
-- [ ] Use https://just.systems to automate?
-- [ ] Use smart contract with updated Post and Comment. They have owner addresses now.
+- [X] Use https://just.systems to automate?
+- [X] Use smart contract with updated Post and Comment. They have owner addresses now.
 
 ## Firefox weirdness
 
