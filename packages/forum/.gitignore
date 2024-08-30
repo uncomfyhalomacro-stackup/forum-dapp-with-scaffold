@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ABI of contract
+packages/forum/src/contracts/Forum.json
