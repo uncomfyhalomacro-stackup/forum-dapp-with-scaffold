@@ -13,6 +13,7 @@ import {
 } from "../../web3-utils/web3-init";
 import { useState } from "react";
 import type { PostDetails } from "./components/Posts";
+import type { Address } from "viem";
 
 // loader function for the list of posts in the forum
 const forumLoader = async () => {
@@ -138,12 +139,12 @@ const ShareableForumItemComponent = ({
 
 // ForumItem is just one Post
 const ForumItem = ({
-	postId,
+	owner,
 	title,
 	description,
-	likes,
 	timestamp,
 }: {
+	owner: Address;
 	postId: bigint;
 	title: string;
 	description: string;
@@ -161,6 +162,7 @@ const ForumItem = ({
 						{readableDate.toDateString()}
 					</time>
 				</h1>
+				<h2>Posted by {owner}</h2>
 				<p>{description}</p>
 			</article>
 		</div>
@@ -176,6 +178,7 @@ const Forum = () => {
 				<>
 					<Link to={"/posts/".concat(post.id.toString())} key={post.id}>
 						<ForumItem
+							owner={post.owner}
 							postId={post.id}
 							title={post.title}
 							description={post.description}

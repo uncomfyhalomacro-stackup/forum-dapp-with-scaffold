@@ -9,10 +9,8 @@ import {
 	redirect,
 	type ActionFunctionArgs,
 	Outlet,
-	useParams,
 	useLoaderData,
 	type Params,
-	useNavigate,
 } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { rainbowConfig as config } from "../../../web3-utils/web3-init";
@@ -26,6 +24,11 @@ import {
 import { abi, deployedContractAddress } from "../../../web3-utils/web3-init.ts";
 import { PollStub } from "./Polls.tsx";
 import { ForumItem, ShareableForumItemComponent } from "../Forum.tsx";
+import type { Address } from "viem";
+import {
+	ShareableCommentItemComponent,
+	type CommentDetails,
+} from "./Comment.tsx";
 
 export type PostStatus = {
 	error: string;
@@ -44,6 +47,7 @@ export type PostActionData = {
 // 	uint256 timestamp;
 // }
 export type PostDetails = {
+	owner: Address;
 	id: bigint;
 	title: string;
 	description: string;
@@ -246,6 +250,11 @@ type PostRouteParams = {
 	id: string;
 };
 
+type PostAndComments = {
+	post: PostDetails;
+	comments: CommentDetails[];
+};
+
 const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
 	const id = params.id as string;
 	const postId = Number.parseInt(id, 10);
@@ -256,15 +265,40 @@ const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
 		args: [postId],
 	})) as PostDetails;
 
-	return post;
+	const commentIds: bigint[] = (await readContract(config, {
+		abi: abi,
+		address: deployedContractAddress,
+		functionName: "getCommentsFromPost",
+		args: [postId],
+	})) as bigint[];
+
+	const comments: CommentDetails[] = [];
+
+	for (const commentId in commentIds) {
+		const comment = (await readContract(config, {
+			abi: abi,
+			address: deployedContractAddress,
+			functionName: "getComment",
+			args: [commentId],
+		})) as CommentDetails;
+		comments.push(comment);
+	}
+
+	const postandcomments: PostAndComments = {
+		post: post,
+		comments: comments,
+	};
+
+	return postandcomments;
 };
 
 const PostRouteChangeable = () => {
-	const post = useLoaderData() as PostDetails;
+	const { post, comments } = useLoaderData() as PostAndComments;
 
 	return (
 		<>
 			<ForumItem
+				owner={post.owner}
 				postId={post.id}
 				title={post.title}
 				description={post.description}
@@ -272,6 +306,23 @@ const PostRouteChangeable = () => {
 				timestamp={post.timestamp}
 			/>
 			<ShareableForumItemComponent postId={post.id} likes={post.likes} />
+			<Link to={"comment"}>Comment</Link>
+			<h1>Comments below</h1>
+			<div>
+				{comments.map((comment) => (
+					<>
+						<div key={comment.id}>
+							<h1>{comment.title}</h1>
+							<p>{comment.description}</p>
+							<ShareableCommentItemComponent
+								commentId={comment.id}
+								likes={comment.likes}
+							/>
+						</div>
+					</>
+				))}
+			</div>
+			<Outlet />
 		</>
 	);
 };

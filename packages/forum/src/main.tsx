@@ -11,7 +11,6 @@ import Post, {
 	postActionHandler,
 	PostFailurePage,
 	PostRouteChangeable,
-	PostRouteParams,
 	PostSuccessPage,
 	StandAlonePostPage,
 } from "./pages/forum/components/Posts.tsx";
@@ -33,6 +32,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 // Utils
 import { queryClientConfig, rainbowConfig } from "./web3-utils/web3-init.ts";
 import { Navbar } from "./components/Navbar.tsx";
+import Comment, {
+	commentActionHandler,
+	CommentFailurePage,
+	CommentSuccessPage,
+	loaderGetPostId,
+} from "./pages/forum/components/Comment.tsx";
 
 const domNode = document.getElementById("root") || new HTMLElement(); // Or use as HTMLElement. See https://stackoverflow.com/a/55781571
 
@@ -65,6 +70,7 @@ const router = createBrowserRouter([
 		path: "/posts",
 		element: <StandAlonePostPage />,
 		loader: () => {
+			// Hack?
 			if (
 				window.location.pathname.endsWith("posts") ||
 				window.location.pathname.endsWith("posts/")
@@ -78,6 +84,24 @@ const router = createBrowserRouter([
 				path: ":id",
 				element: <PostRouteChangeable />,
 				loader: loaderGetPostById,
+				children: [
+					{
+						path: "/posts/:id/comment",
+						element: <Comment />,
+						loader: loaderGetPostId,
+						action: commentActionHandler,
+						children: [
+							{
+								path: "success",
+								element: <CommentSuccessPage />,
+							},
+							{
+								path: "failure",
+								element: <CommentFailurePage />,
+							},
+						],
+					},
+				],
 			},
 		],
 	},
