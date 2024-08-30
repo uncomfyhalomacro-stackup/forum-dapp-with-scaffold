@@ -12,8 +12,16 @@ import {
 } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { rainbowConfig as config } from "../../../web3-utils/web3-init";
-import { getAccount, simulateContract, writeContract } from "wagmi/actions";
+import {
+	getAccount,
+	getBlock,
+	readContract,
+	simulateContract,
+	waitForTransactionReceipt,
+	writeContract,
+} from "wagmi/actions";
 import { abi, deployedContractAddress } from "../../../web3-utils/web3-init.ts";
+import { Poll, type PollDetails } from "./Polls.tsx";
 
 export type PostStatus = {
 	error: string;
@@ -27,6 +35,8 @@ export type PostDetails = {
 	title: string;
 	description: string;
 	spoiler: boolean;
+	hasPoll: boolean;
+	pollDetails: PollDetails;
 };
 
 export type PostLoaderData = {
@@ -42,6 +52,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 		title: data.get("title") as FormDataEntryValue,
 		description: data.get("description") as FormDataEntryValue,
 		spoiler: data.get("spoiler") as FormDataEntryValue,
+		hasPoll: data.get("hasPoll") as FormDataEntryValue,
 	};
 
 	if (!postSubmission.title.valueOf().toString().trim()) {
@@ -63,21 +74,86 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 	const title = postSubmission.title.valueOf().toString().trim();
 	const description = postSubmission.description.valueOf().toString().trim();
 	const spoil = postSubmission.spoiler.valueOf().toString().trim() === "on";
+	const hasPoll = postSubmission.hasPoll.valueOf().toString().trim() === "on";
 	if (account.isConnected) {
-		await simulateContract(config, {
+		const { result } = await simulateContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "createPost",
 			args: [title, description, spoil],
 			account: account.address,
 		});
-		await writeContract(config, {
+
+		console.log(result);
+
+		const postTxHash = await writeContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "createPost",
 			args: [title, description, spoil],
 			account: account.address,
 		});
+
+		const transaction = await waitForTransactionReceipt(config, {
+			hash: postTxHash,
+		});
+
+		if (transaction.status === "reverted") {
+			return redirect("/post/error");
+		}
+
+		const readUserPosts: number[] = (await readContract(config, {
+			abi: abi,
+			address: deployedContractAddress,
+			functionName: "getPostsFromAddress",
+			args: [account.address],
+		})) as number[];
+
+		// this won't affect the contract anyway
+		const latestPostId = readUserPosts.pop();
+
+		if (hasPoll) {
+			const pollDescription = data.get(
+				"poll-description",
+			) as FormDataEntryValue;
+			const pollOption1 = data.get("poll-option1") as FormDataEntryValue;
+			const pollOption2 = data.get("poll-option2") as FormDataEntryValue;
+			const { result } = await simulateContract(config, {
+				abi: abi,
+				address: deployedContractAddress,
+				functionName: "createPoll",
+				args: [
+					latestPostId,
+					pollDescription.valueOf().toString().trim(),
+					pollOption1.valueOf().toString().trim(),
+					pollOption2.valueOf().toString().trim(),
+				],
+				account: account.address,
+			});
+
+			const pollTxHash = await writeContract(config, {
+				abi: abi,
+				address: deployedContractAddress,
+				functionName: "createPoll",
+				args: [
+					latestPostId,
+					pollDescription.valueOf().toString().trim(),
+					pollOption1.valueOf().toString().trim(),
+					pollOption2.valueOf().toString().trim(),
+				],
+				account: account.address,
+			});
+
+			const transaction = await waitForTransactionReceipt(config, {
+				hash: pollTxHash,
+			});
+
+			if (transaction.status === "reverted") {
+				return redirect("/post/error");
+			}
+
+			console.log(result);
+		}
 		return redirect("/post/success");
 	}
 	return redirect("/post/error");
@@ -108,6 +184,7 @@ const Post = () => {
 						Spoil or not to spoil
 						<input type="checkbox" name="spoiler" defaultChecked />
 					</label>
+					<Poll />
 					<button type="submit">Create Post</button>
 					{actionData?.status?.error && <p>{actionData?.status?.error}</p>}
 				</Form>
