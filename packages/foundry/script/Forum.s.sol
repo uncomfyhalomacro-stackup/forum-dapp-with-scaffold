@@ -19,14 +19,6 @@ contract ForumDeployerScript is Script {
 
         forum = new Forum();
 
-        writeScriptToFrontend();
-
         vm.stopBroadcast();
-    }
-
-    function writeScriptToFrontend() public {
-        // Path is relative to foundry project root
-        string memory forumJsonFile = vm.readFile("./out/Forum.sol/Forum.json");
-        vm.writeFile("../forum/src/contracts/Forum.json", forumJsonFile);
     }
 }
