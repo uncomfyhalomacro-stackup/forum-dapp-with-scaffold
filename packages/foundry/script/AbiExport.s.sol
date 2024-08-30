@@ -4,7 +4,6 @@ pragma solidity ^0.8.13;
 import {Script} from "forge-std/Script.sol";
 
 contract AbiExportScript is Script {
-
     function run() external {
         writeScriptToFrontend();
     }
