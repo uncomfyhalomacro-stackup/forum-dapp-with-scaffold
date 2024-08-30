@@ -266,14 +266,14 @@ const ShareableCommentItemComponent = ({
 			return;
 		}
 
-		const post: PostDetails = (await readContract(config, {
+		const comment: CommentDetails = (await readContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "getPost",
 			args: [commentId],
-		})) as PostDetails;
+		})) as CommentDetails;
 
-		setLikeCounter(post.likes);
+		setLikeCounter(comment.likes);
 	};
 
 	return (

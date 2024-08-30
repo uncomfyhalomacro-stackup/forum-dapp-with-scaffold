@@ -313,6 +313,7 @@ const PostRouteChangeable = () => {
 					<>
 						<div key={comment.id}>
 							<h1>{comment.title}</h1>
+							<h2>by {comment.owner}</h2>
 							<p>{comment.description}</p>
 							<ShareableCommentItemComponent
 								commentId={comment.id}

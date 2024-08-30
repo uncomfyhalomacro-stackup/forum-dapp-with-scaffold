@@ -24,7 +24,7 @@ const forumLoader = async () => {
 		functionName: "postIdIncrement",
 	})) as bigint;
 
-	for (let i = 1; i < totalPostCount; i++) {
+	for (let i = 0; i < totalPostCount; i++) {
 		const post: PostDetails = (await readContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
