@@ -12,7 +12,7 @@ const Profile = () => {
 				</h1>
 				<h3>
 					<Link to="/">Go back to home page</Link> or to{" "}
-					<Link to="/feed">Feed</Link>.
+					<Link to="/forum">Forum</Link>.
 				</h3>
 			</main>
 		);

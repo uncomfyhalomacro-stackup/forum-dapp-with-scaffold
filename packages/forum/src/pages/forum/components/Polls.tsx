@@ -6,7 +6,7 @@ export type PollDetails = {
 	option2: string;
 };
 
-const Poll = () => {
+const PollStub = () => {
 	const [pollElementVisible, setPollElementVisible] = useState(true);
 	return (
 		<>
@@ -45,4 +45,4 @@ const Poll = () => {
 	);
 };
 
-export { Poll };
+export { PollStub };

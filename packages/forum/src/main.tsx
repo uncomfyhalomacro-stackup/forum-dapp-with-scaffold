@@ -4,16 +4,23 @@ import "./index.css";
 import ReactDOM from "react-dom/client";
 
 // Different pages here
-import Forum from "./pages/forum/Forum.tsx";
+import Forum, { forumLoader } from "./pages/forum/Forum.tsx";
 import Profile from "./pages/profile/Profile.tsx";
-import {
-	Post,
-	PostActionHandler,
+import Post, {
+	loaderGetPostById,
+	postActionHandler,
 	PostFailurePage,
+	PostRouteChangeable,
+	PostRouteParams,
 	PostSuccessPage,
+	StandAlonePostPage,
 } from "./pages/forum/components/Posts.tsx";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	redirect,
+	RouterProvider,
+} from "react-router-dom";
 
 // RainbowKit specific css
 import "@rainbow-me/rainbowkit/styles.css";
@@ -35,13 +42,14 @@ const router = createBrowserRouter([
 		element: <RootPage />,
 	},
 	{
-		path: "/feed",
+		path: "/forum",
 		element: <Forum />,
+		loader: forumLoader,
 	},
 	{
 		path: "/post",
 		element: <Post />,
-		action: PostActionHandler,
+		action: postActionHandler,
 		children: [
 			{
 				path: "success",
@@ -50,6 +58,26 @@ const router = createBrowserRouter([
 			{
 				path: "failure",
 				element: <PostFailurePage />,
+			},
+		],
+	},
+	{
+		path: "/posts",
+		element: <StandAlonePostPage />,
+		loader: () => {
+			if (
+				window.location.pathname.endsWith("posts") ||
+				window.location.pathname.endsWith("posts/")
+			) {
+				return redirect("/");
+			}
+			return null;
+		},
+		children: [
+			{
+				path: ":id",
+				element: <PostRouteChangeable />,
+				loader: loaderGetPostById,
 			},
 		],
 	},

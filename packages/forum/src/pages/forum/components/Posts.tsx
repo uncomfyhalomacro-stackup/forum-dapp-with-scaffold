@@ -9,19 +9,23 @@ import {
 	redirect,
 	type ActionFunctionArgs,
 	Outlet,
+	useParams,
+	useLoaderData,
+	type Params,
+	useNavigate,
 } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { rainbowConfig as config } from "../../../web3-utils/web3-init";
 import {
 	getAccount,
-	getBlock,
 	readContract,
 	simulateContract,
 	waitForTransactionReceipt,
 	writeContract,
 } from "wagmi/actions";
 import { abi, deployedContractAddress } from "../../../web3-utils/web3-init.ts";
-import { Poll, type PollDetails } from "./Polls.tsx";
+import { PollStub } from "./Polls.tsx";
+import { ForumItem, ShareableForumItemComponent } from "../Forum.tsx";
 
 export type PostStatus = {
 	error: string;
@@ -31,19 +35,28 @@ export type PostActionData = {
 	status: PostStatus | null;
 };
 
+// struct Post {
+// 	uint256 id;
+// 	string title;
+// 	string description;
+// 	bool spoil;
+// 	uint256 likes;
+// 	uint256 timestamp;
+// }
 export type PostDetails = {
+	id: bigint;
 	title: string;
 	description: string;
 	spoiler: boolean;
-	hasPoll: boolean;
-	pollDetails: PollDetails;
+	likes: bigint;
+	timestamp: bigint;
 };
 
 export type PostLoaderData = {
 	post: PostDetails | null;
 };
 
-const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
+const postActionHandler = async ({ request }: ActionFunctionArgs) => {
 	console.log(request);
 	const data: FormData = await request.formData();
 	const account = getAccount(config);
@@ -103,18 +116,20 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 			return redirect("/post/error");
 		}
 
-		const readUserPosts: number[] = (await readContract(config, {
+		const readUserPosts: bigint[] = (await readContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "getPostsFromAddress",
 			args: [account.address],
-		})) as number[];
+		})) as bigint[];
 
 		// this won't affect the contract anyway
 		const latestPostId = readUserPosts.pop();
 
 		if (hasPoll) {
-			alert("You created a poll. You have to sign another transaction again 🙏");
+			alert(
+				"You created a poll. You have to sign another transaction again 🙏",
+			);
 			const pollDescription = data.get(
 				"poll-description",
 			) as FormDataEntryValue;
@@ -151,7 +166,9 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 			});
 
 			if (transaction.status === "reverted") {
-				alert("Creating poll failed! Transaction was reverted due to an error!");
+				alert(
+					"Creating poll failed! Transaction was reverted due to an error!",
+				);
 				return redirect("/post/error");
 			}
 
@@ -188,7 +205,7 @@ const Post = () => {
 						Spoil or not to spoil
 						<input type="checkbox" name="spoiler" defaultChecked />
 					</label>
-					<Poll />
+					<PollStub />
 					<button type="submit">Create Post</button>
 					{actionData?.status?.error && <p>{actionData?.status?.error}</p>}
 				</Form>
@@ -225,4 +242,59 @@ const PostFailurePage = () => {
 	);
 };
 
-export { PostSuccessPage, PostFailurePage, Post, PostActionHandler };
+type PostRouteParams = {
+	id: string;
+};
+
+const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
+	const id = params.id as string;
+	const postId = Number.parseInt(id, 10);
+	const post: PostDetails = (await readContract(config, {
+		abi: abi,
+		address: deployedContractAddress,
+		functionName: "getPost",
+		args: [postId],
+	})) as PostDetails;
+
+	return post;
+};
+
+const PostRouteChangeable = () => {
+	const post = useLoaderData() as PostDetails;
+
+	return (
+		<>
+			<ForumItem
+				postId={post.id}
+				title={post.title}
+				description={post.description}
+				likes={post.likes}
+				timestamp={post.timestamp}
+			/>
+			<ShareableForumItemComponent postId={post.id} likes={post.likes} />
+		</>
+	);
+};
+
+const StandAlonePostPage = () => {
+	return (
+		<div>
+			<Outlet />
+			<h3>
+				<Link to="/">Go back to home page</Link> or to{" "}
+				<Link to="/forum">Forum</Link>.
+			</h3>
+		</div>
+	);
+};
+
+export default Post;
+export {
+	postActionHandler,
+	loaderGetPostById,
+	PostRouteChangeable,
+	StandAlonePostPage,
+	PostFailurePage,
+	PostSuccessPage,
+	type PostRouteParams,
+};

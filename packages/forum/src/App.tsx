@@ -24,7 +24,7 @@ const RootPage = () => {
 				</div>
 				<div>
 					<h2>
-						You are now logged in. Visit our <Link to="/feed">Feed</Link> or
+						You are now logged in. Visit our <Link to="/forum">Forum</Link> or
 						visit your <Link to="/profile">Profile</Link>.
 					</h2>
 				</div>
@@ -52,7 +52,7 @@ const RootPage = () => {
 				<div>
 					<h2>
 						Head to our other StackUp sites above or connect your wallet to
-						login to our <Link to="/feed">Feed</Link>.
+						login to our <Link to="/forum">Forum</Link>.
 					</h2>
 				</div>
 			</div>
