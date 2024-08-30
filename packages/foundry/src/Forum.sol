@@ -84,7 +84,6 @@ contract Forum {
         uint256 commentId = commentIdIncrement++;
         comments[commentId] = Comment(msg.sender, commentId, _title, _description, _spoil, 0, block.timestamp);
         postToComments[_postId].push(commentId);
-        userPolls[msg.sender].push(commentId);
         return commentId;
     }
 
