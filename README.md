@@ -65,6 +65,7 @@ just export-abi
 - [X] Forum Smart Contract
 - ~~[ ] Posts Smart Contract~~
 - [ ] Use https://just.systems to automate?
+- [ ] Use smart contract with updated Post and Comment. They have owner addresses now.
 
 ## Firefox weirdness
 
