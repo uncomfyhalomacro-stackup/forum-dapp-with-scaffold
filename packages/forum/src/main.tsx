@@ -32,11 +32,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 // Utils
 import { queryClientConfig, rainbowConfig } from "./web3-utils/web3-init.ts";
 import { Navbar } from "./components/Navbar.tsx";
-import Comment, {
+import {
 	commentActionHandler,
 	CommentFailurePage,
 	CommentSuccessPage,
-	loaderGetPostId,
 } from "./pages/forum/components/Comment.tsx";
 
 const domNode = document.getElementById("root") || new HTMLElement(); // Or use as HTMLElement. See https://stackoverflow.com/a/55781571
@@ -84,22 +83,15 @@ const router = createBrowserRouter([
 				path: ":id",
 				element: <PostRouteChangeable />,
 				loader: loaderGetPostById,
+				action: commentActionHandler,
 				children: [
 					{
-						path: "/posts/:id/comment",
-						element: <Comment />,
-						loader: loaderGetPostId,
-						action: commentActionHandler,
-						children: [
-							{
-								path: "success",
-								element: <CommentSuccessPage />,
-							},
-							{
-								path: "failure",
-								element: <CommentFailurePage />,
-							},
-						],
+						path: "comment/success",
+						element: <CommentSuccessPage />,
+					},
+					{
+						path: "comment/failure",
+						element: <CommentFailurePage />,
 					},
 				],
 			},

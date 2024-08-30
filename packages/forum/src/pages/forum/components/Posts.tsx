@@ -25,7 +25,8 @@ import { abi, deployedContractAddress } from "../../../web3-utils/web3-init.ts";
 import { PollStub } from "./Polls.tsx";
 import { ForumItem, ShareableForumItemComponent } from "../Forum.tsx";
 import type { Address } from "viem";
-import {
+import CommentProp, {
+	type CommentActionData,
 	ShareableCommentItemComponent,
 	type CommentDetails,
 } from "./Comment.tsx";
@@ -257,7 +258,7 @@ type PostAndComments = {
 
 const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
 	const id = params.id as string;
-	const postId = Number.parseInt(id, 10);
+	const postId = Number.parseInt(id.trim(), 10);
 	const post: PostDetails = (await readContract(config, {
 		abi: abi,
 		address: deployedContractAddress,
@@ -265,21 +266,23 @@ const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
 		args: [postId],
 	})) as PostDetails;
 
-	const commentIds: bigint[] = (await readContract(config, {
+	const commentIds: number[] = (await readContract(config, {
 		abi: abi,
 		address: deployedContractAddress,
 		functionName: "getCommentsFromPost",
 		args: [postId],
-	})) as bigint[];
+	})) as number[];
+
+	console.log(commentIds);
 
 	const comments: CommentDetails[] = [];
-
-	for (const commentId in commentIds) {
+	// WARN: DO NOT USE A REGULAR FOR LOOP
+	for await (const commentid of commentIds) {
 		const comment = (await readContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "getComment",
-			args: [commentId],
+			args: [commentid],
 		})) as CommentDetails;
 		comments.push(comment);
 	}
@@ -294,6 +297,7 @@ const loaderGetPostById = async ({ params }: { params: Params<string> }) => {
 
 const PostRouteChangeable = () => {
 	const { post, comments } = useLoaderData() as PostAndComments;
+	const actionData = useActionData() as CommentActionData;
 
 	return (
 		<>
@@ -306,8 +310,9 @@ const PostRouteChangeable = () => {
 				timestamp={post.timestamp}
 			/>
 			<ShareableForumItemComponent postId={post.id} likes={post.likes} />
-			<Link to={"comment"}>Comment</Link>
+			<CommentProp post={post} actionData={actionData} />
 			<h1>Comments below</h1>
+
 			<div>
 				{comments.map((comment) => (
 					<>
@@ -343,6 +348,7 @@ const StandAlonePostPage = () => {
 export default Post;
 export {
 	postActionHandler,
+	type PostAndComments,
 	loaderGetPostById,
 	PostRouteChangeable,
 	StandAlonePostPage,

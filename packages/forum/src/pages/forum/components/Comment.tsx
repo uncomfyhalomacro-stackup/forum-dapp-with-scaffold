@@ -4,11 +4,8 @@
 import {
 	Link,
 	Form,
-	useActionData,
 	redirect,
 	type ActionFunctionArgs,
-	Outlet,
-	useLoaderData,
 	type Params,
 } from "react-router-dom";
 import { rainbowConfig as config } from "../../../web3-utils/web3-init";
@@ -120,34 +117,25 @@ const commentActionHandler = async ({ request }: ActionFunctionArgs) => {
 				"Creating comment failed! Transaction was reverted due to an error!",
 			);
 			// `/post/:id/comment/failure`
-			return redirect("./failure");
+			return redirect("./comment/failure");
 		}
 		alert("Succesfully commented to post");
-		return redirect("./success");
+		return redirect("./comment/success");
 	}
-	return redirect("./failure");
+	return redirect("./comment/failure");
 };
 
-const Comment = () => {
-	const actionData = useActionData() as CommentActionData;
-	const loaderData = useLoaderData() as number;
-
+const CommentProp = ({
+	post,
+	actionData,
+}: { post: PostDetails; actionData: CommentActionData }) => {
 	const account = getAccount(config);
 	if (account.isConnected) {
 		return (
 			<div>
-				<Form
-					method="POST"
-					action={"/posts/".concat(loaderData.toString()).concat("/comment")}
-				>
+				<Form method="POST" action={"/posts/".concat(post.id.toString())}>
 					<h1>Comment something wonderful!</h1>
-					<input
-						defaultValue={loaderData}
-						name="post-id"
-						type="number"
-						hidden
-						readOnly
-					/>
+					<input value={Number(post.id)} name="post-id" type="number" hidden />
 					<input
 						type="text"
 						name="comment-title"
@@ -166,7 +154,6 @@ const Comment = () => {
 					<button type="submit">Submit Comment</button>
 					{actionData?.status?.error && <p>{actionData?.status?.error}</p>}
 				</Form>
-				<Outlet />
 			</div>
 		);
 	}
@@ -295,7 +282,7 @@ const ShareableCommentItemComponent = ({
 	);
 };
 
-export default Comment;
+export default CommentProp;
 export {
 	commentActionHandler,
 	CommentFailurePage,
