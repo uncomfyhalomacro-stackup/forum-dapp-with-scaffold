@@ -64,7 +64,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 	const description = postSubmission.description.valueOf().toString().trim();
 	const spoil = postSubmission.spoiler.valueOf().toString().trim() === "on";
 	if (account.isConnected) {
-		const { result } = await simulateContract(config, {
+		await simulateContract(config, {
 			abi: abi,
 			address: deployedContractAddress,
 			functionName: "createPost",

@@ -3,7 +3,7 @@ const deployedContractAddress = import.meta.env.VITE_DEPLOYED_CONTRACT;
 
 import { abi } from "../contracts/Forum.json";
 
-import { Chain, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import {
 	arbitrum,
 	arbitrumSepolia,
