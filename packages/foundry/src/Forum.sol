@@ -4,6 +4,7 @@ pragma solidity ^0.8.9;
 contract Forum {
     // declare constructs for post
     struct Post {
+        address owner;
         uint256 id;
         string title;
         string description;
@@ -13,6 +14,7 @@ contract Forum {
     }
 
     struct Comment {
+        address owner;
         uint256 id;
         string title;
         string description;
@@ -56,7 +58,7 @@ contract Forum {
 
     function createPost(string memory _title, string memory _description, bool _spoil) public returns (uint256) {
         uint256 postId = postIdIncrement++;
-        posts[postId] = Post(postId, _title, _description, _spoil, 0, block.timestamp);
+        posts[postId] = Post(msg.sender, postId, _title, _description, _spoil, 0, block.timestamp);
         userPosts[msg.sender].push(postId);
         return postId;
     }
@@ -80,7 +82,7 @@ contract Forum {
     {
         require(_postId <= postIdIncrement, "Post does not exist!");
         uint256 commentId = commentIdIncrement++;
-        comments[commentId] = Comment(commentId, _title, _description, _spoil, 0, block.timestamp);
+        comments[commentId] = Comment(msg.sender, commentId, _title, _description, _spoil, 0, block.timestamp);
         postToComments[_postId].push(commentId);
         userPolls[msg.sender].push(commentId);
         return commentId;
