@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # ABI of contract
-packages/forum/src/contracts/Forum.json
+/packages/forum/src/contracts/Forum.json
