@@ -1,9 +1,8 @@
-
 #!/usr/bin/just
 
 build:
-	yarn workspace @forum-dapp-with-scaffold/forum build
 	just packages/foundry/compile
+	yarn workspace @forum-dapp-with-scaffold/forum build
 
 export-abi:
 	just packages/foundry/export-abi
