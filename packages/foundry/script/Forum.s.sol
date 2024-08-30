@@ -4,16 +4,29 @@ pragma solidity ^0.8.13;
 import {Script, console} from "forge-std/Script.sol";
 import {Forum} from "../src/Forum.sol";
 
-contract ForumScript is Script {
+// Full command of script is
+// `source .env && forge script --chain arbitrum-sepolia script/Forum.s.sol:ForumDeployerScript --rpc-url arbitrum-sepolia --broadcast --etherscan-api-key "${ARBISCAN_API_KEY}" --verifier-url "${VERIFIER_URL}" --verify  -vvvv`
+// if done manually
+contract ForumDeployerScript is Script {
     Forum public forum;
 
     function setUp() public {}
 
-    function run() public {
-        vm.startBroadcast();
+    function run() external {
+        // reads our .env file
+        uint256 deployerPrivateKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
+        vm.startBroadcast(deployerPrivateKey);
 
         forum = new Forum();
 
+        writeScriptToFrontend();
+
         vm.stopBroadcast();
+    }
+
+    function writeScriptToFrontend() public {
+        // Path is relative to foundry project root
+        string memory forumJsonFile = vm.readFile("./out/Forum.sol/Forum.json");
+        vm.writeFile("../forum/src/contracts/Forum.json", forumJsonFile);
     }
 }
