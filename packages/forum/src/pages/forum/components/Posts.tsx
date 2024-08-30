@@ -99,6 +99,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 		});
 
 		if (transaction.status === "reverted") {
+			alert("Creating post failed! Transaction was reverted due to an error!");
 			return redirect("/post/error");
 		}
 
@@ -113,6 +114,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 		const latestPostId = readUserPosts.pop();
 
 		if (hasPoll) {
+			alert("You created a poll. You have to sign another transaction again 🙏");
 			const pollDescription = data.get(
 				"poll-description",
 			) as FormDataEntryValue;
@@ -149,6 +151,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 			});
 
 			if (transaction.status === "reverted") {
+				alert("Creating poll failed! Transaction was reverted due to an error!");
 				return redirect("/post/error");
 			}
 
@@ -156,6 +159,7 @@ const PostActionHandler = async ({ request }: ActionFunctionArgs) => {
 		}
 		return redirect("/post/success");
 	}
+	alert("Post creation failed! Reason unknown.");
 	return redirect("/post/error");
 };
 
